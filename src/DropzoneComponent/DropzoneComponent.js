@@ -101,27 +101,33 @@ function DropzoneComponent(props) {
   // обработка данных таблицы и обновление
   const handleSubmit = () => {
     setShowPopup(false);
-    const updatedTableData = tableData.map(row => {
-      const newRow = {};
-      tableHeaders.forEach((newHeader, index) => {
-        const oldHeader = tableData.columns[index];
-        newRow[newHeader] = row[oldHeader];
-      });
-      return newRow;
+    tableHeaders.forEach((header, index) => {
+      const updatedTableData = tableData.map(row => ({
+        [header]: row[tableData.columns[index]],
+      }));
+      switch (tableType) {
+        case 'Employees':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=employees');
+          break;
+        case 'Materials':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=material');
+          break;
+        case 'Tools':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=instrument');
+          break;
+        case 'Nomenclature':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=production');
+          break;
+        case 'NomenclatureGroups':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=production_group');
+          break;
+        case 'NormalizationOfCycles':
+          exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=norma');
+          break;
+        default:
+          break;
+      }
     });
-    if (tableType === 'Employess') {
-      exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=employees');
-    } else if (tableType === 'Materials') {
-      exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=material');
-    } else if (tableType === 'Tools') {
-      exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=instrument');
-    } else if (tableType === 'Nomenclature') {
-      exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=production');
-    } else if (tableType === 'NomenclatureGroups') {
-      exportToCSV(updatedTableData, 'http://albaplus.qcan.su/admin/?action=production_group');
-    } else if (tableType === 'NormalizationOfCycles') {
-      exportToCSV(updatedTableData, 'nhttp://albaplus.qcan.su/admin/?action=norma,');
-    }
     //exportToXLSX(updatedTableData);
   };
 
